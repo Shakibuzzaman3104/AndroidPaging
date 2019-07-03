@@ -10,8 +10,10 @@ import android.R.attr.data
 import com.example.androidpaging.model.ModelEmployee
 import io.reactivex.Single
 import android.R.attr.data
-
-
+import android.widget.Toast
+import io.reactivex.SingleObserver
+import io.reactivex.disposables.Disposable
+import okhttp3.ResponseBody
 
 
 class EmployeeDataSource: ItemKeyedDataSource<Any, Any>() {
@@ -20,12 +22,22 @@ class EmployeeDataSource: ItemKeyedDataSource<Any, Any>() {
         val question = apiInterface.getQuestion();
         question.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Single<ModelEmployee> {
+            .subscribe(object :SingleObserver<List<ModelEmployee>> {
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onSuccess(responseBody: List<ModelEmployee>) {
+                    callback.onResult(responseBody,0,10);
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
                 
             })
 
-
-        
 
     }
 
